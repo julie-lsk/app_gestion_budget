@@ -39,16 +39,23 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Pricing</a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Mon compte
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Mes informations</a>
-                                    <a class="dropdown-item" href="#">Moyens de paiement</a>
-                                    <a class="dropdown-item" href="#">Me déconnecter</a>
-                                </div>
-                            </li>
+                            {# Connexion utilisateur #}
+                            {% if app.user %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Mon compte
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Mes informations</a>
+                                        <a class="dropdown-item" href="{{ path('moyens_paiement') }}">Moyens de paiement</a>
+                                        <a class="dropdown-item" href="{{ path('app_logout') }}">Me déconnecter</a>
+                                    </div>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('app_login') }}">Se connecter</a>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </nav>
@@ -56,6 +63,8 @@
         {% endblock %}
 
 
-        {% block body %}{% endblock %}
+        {% block body %}
+            
+        {% endblock %}
     </body>
 </html>
