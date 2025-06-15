@@ -3,7 +3,7 @@
 {% block title %}Créer un compte{% endblock %}
 
 {% block body %}
-<div class="container">
+{# <div class="container">
     <form method="post" class="form my-5 mx-auto">
 
         {% if app.user %}
@@ -34,5 +34,18 @@
     <a href="{{ path('app_login') }}" class="btn btn-lg btn-secondary">
         Se connecter
     </a>
+</div> #}
+<div class="container mt-5">
+    <h1 class="mb-4">Créer un compte</h1>
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.plainPassword) }}
+
+        <button class="btn btn-primary">Créer mon compte</button>
+    {{ form_end(registrationForm) }}
+
+    <hr>
+    <p>Vous avez déjà un compte ? <a href="{{ path('app_login') }}" class="btn btn-secondary">Se connecter</a></p>
 </div>
 {% endblock %}

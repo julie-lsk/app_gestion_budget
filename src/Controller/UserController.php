@@ -16,7 +16,7 @@ class UserController extends AbstractController
 {
     // Créer un compte
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
 
@@ -26,12 +26,16 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // Récupération du mot de passe depuis le formulaire (brut)
+            $plainPassword = $form->get('plainPassword')->getData();
+
             // Hash le MDP
-            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
+            $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
             $user->setPassword($hashedPassword);
 
-            $em->persist($user);
-            $em->flush();
+            // Enregistrement en BDD
+            $entityManager->persist($user);
+            $entityManager->flush();
 
             // Connexion automatique après inscription
             return $this->redirectToRoute('app_login');

@@ -6,6 +6,8 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,11 +23,14 @@ class RegisterFormType extends AbstractType
                     new Assert\Email(),
                 ],
             ])
-            ->add('password', PasswordType::class, [
-                'mapped' => true,  // Lien avec le champ de l'entité User
+            ->add('plainPassword', PasswordType::class, [
+                'mapped' => false,  // Ne va pas directement dans l'entité User
                 'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(['min' => 6]),
+                    new NotBlank(['message' => 'Le mot de passe est requis']),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères',
+                    ]),
                 ],
             ])
         ;
