@@ -16,6 +16,22 @@ class MoyenDePaiement
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
+    #[ORM\ManyToOne(inversedBy: 'moyensDePaiement')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(int $user): static
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

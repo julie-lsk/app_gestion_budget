@@ -28,6 +28,24 @@ class Transaction
     #[ORM\JoinColumn(nullable: false)]
     private ?MoyenDePaiement $moyenDePaiement = null;
 
+    #[ORM\ManyToOne(inversedBy: 'transactions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\Column(length: 30)]
+    private string $type;
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
