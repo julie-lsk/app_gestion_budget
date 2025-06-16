@@ -1,24 +1,41 @@
 @import "./style.css";
 
-h1, .h1 {
-    font-weight: 700;
-    color: black;
+.accueil-bienvenue {
+    min-height: 72vh;
+    padding-top: 2rem;
+
+    h1, .h1 {
+        font-weight: 700;
+        color: black;
+    }
+    
+    h2, .h3 {
+        font-weight: 400;
+    }
 }
 
-h2, .h3 {
-    font-weight: 400;
-}
 
 span {
     color: var(--main-color);
 }
 
+h2, .h3 {
+    font-weight: 700;
+}
+
 .accueil-infos-img {
-    h2, .h3 {
-        font-weight: 700;
-    }
+    padding-top: 3rem;
 
     img {
         width: 100%;
     }
+}
+
+.card-title {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.card {
+    min-height: 100%;
 }
