@@ -21,6 +21,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Transaction::class, orphanRemoval: true)]
+    private Collection $transactions;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Categorie::class, orphanRemoval: true)]
+    private Collection $categories;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: MoyenDePaiement::class, orphanRemoval: true)]
+    private Collection $moyensDePaiement;
+
     /**
      * @var list<string> The user roles
      */
@@ -32,6 +41,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    public function __construct()
+    {
+        $this->transactions = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->moyensDePaiement = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
