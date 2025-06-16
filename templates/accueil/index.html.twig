@@ -1,12 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AccueilController!{% endblock %}
+{% block title %}Budgetfacile{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<h1>Oups</h1>
+    <div class="container my-5">
+        <h1 class="h1 mb-4">Faire son budget n'a jamais été aussi <span>facile</span> !</h1>
+    
+        <h2 class="h3">Ne vous demandez plus où part votre argent ! Avec votre application de budget, prenez le contrôle de vos finances en quelques clics !</h2>
+
+        <a class="btn btn-primary mt-4" href="#" role="button">Je commence à gérer mon budget</a>
+
+        <div class="row my-5 g-3">
+            <div class="col-sm">
+                <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary mt-3">Go somewhere</a>
+                </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary mt-3">Go somewhere</a>
+                </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary mt-3">Go somewhere</a>
+                </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row my-5 g-3 accueil-infos-img">
+            <div class="col-sm-6">
+                <h2 class="h3">Faites vos comptes</h2>
+                <p class="mt-4 mb-3">
+                    Suivez efficacement votre budget en analysant précisément chaque mois, vos revenus et vos dépenses.
+                </p>
+                <p class="mt-2 mb-3">
+                    En quelques minutes par jour, vous avez la satisfaction de maitriser votre situation financière.
+                </p>
+                <p class="mt-2 mb-4">
+                    N’attendez plus mettez en place votre rituel “budget”.
+                </p>
+                <a href="#" class="cta-lien">Gérer mon budget</a>
+            </div>
+
+            <div class="col-sm">
+                <img class="" src="{{ asset('images/suivre-ses-comptes.png') }}" alt="Images de personnes souriantes"/>
+            </div>
+        </div>
+
+    </div>
+
+
 {% endblock %}
