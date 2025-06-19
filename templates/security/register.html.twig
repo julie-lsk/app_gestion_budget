@@ -3,49 +3,19 @@
 {% block title %}Créer un compte{% endblock %}
 
 {% block body %}
-{# <div class="container">
-    <form method="post" class="form my-5 mx-auto">
 
-        {% if app.user %}
-            <div class="mb-3">
-                Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
-            </div>
-        {% endif %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Créer un compte</h1>
 
-        <h1 class="h3 mb-3 font-weight-normal">Créer un compte</h1>
-        <label for="inputEmail">Email</label>
-        <input type="email" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-        <label for="inputPassword">Mot de passe</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="new-password" required>
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('register') }}">
+        {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.plainPassword) }}
 
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me" class="mr-3">Se souvenir de moi
-            </label>
-        </div>
+            <button class="btn btn-primary">Créer mon compte</button>
+        {{ form_end(registrationForm) }}
 
-        <button class="btn btn-lg btn-primary" type="submit">
-            Créer mon compte
-        </button>
-    </form>
+        <hr>
+        <p>Vous avez déjà un compte ? <a href="{{ path('app_login') }}" class="btn btn-secondary">Se connecter</a></p>
+    </div>
 
-    <p>Vous avez déjà un compte ?</p>
-    <a href="{{ path('app_login') }}" class="btn btn-lg btn-secondary">
-        Se connecter
-    </a>
-</div> #}
-<div class="container mt-5">
-    <h1 class="mb-4">Créer un compte</h1>
-
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword) }}
-
-        <button class="btn btn-primary">Créer mon compte</button>
-    {{ form_end(registrationForm) }}
-
-    <hr>
-    <p>Vous avez déjà un compte ? <a href="{{ path('app_login') }}" class="btn btn-secondary">Se connecter</a></p>
-</div>
 {% endblock %}

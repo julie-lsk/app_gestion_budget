@@ -28,6 +28,21 @@ class Transaction
     #[ORM\JoinColumn(nullable: false)]
     private ?MoyenDePaiement $moyenDePaiement = null;
 
+    #[ORM\Column(length: 50)]
+    private ?string $type = null;
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
     #[ORM\ManyToOne(inversedBy: 'transactions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;

@@ -1,0 +1,12 @@
+@import "./style.css";
+
+.dashboard-container {
+    .nav-link {
+        color: var(--text-color);
+
+        &:hover {
+            color: black;
+            opacity: 80%;
+        }
+    }
+}

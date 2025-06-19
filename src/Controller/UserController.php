@@ -38,7 +38,7 @@ class UserController extends AbstractController
             $entityManager->flush();
 
             // Connexion automatique après inscription
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_dashboard');
         }
 
         return $this->render('security/register.html.twig', [
