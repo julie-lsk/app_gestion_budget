@@ -1,5 +1,28 @@
+:root {
+    --main-color: #65bbb0;
+    --main-color-hover: #50948be2;
+    --text-color: #212529bf;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  color: var(--text-color);
+}
+
+.btn-primary {
+    background-color: var(--main-color);
+    border: none;
+
+    &:hover {
+        background-color: var(--main-color-hover);
+    }
+}
+
+.cta-lien {
+    text-decoration: underline;
+    color: var(--main-color);
+    font-weight: 700;
 }
 
 .logo {

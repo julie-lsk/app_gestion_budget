@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+
+    {% set pages = {
+        'dashboard': 'Dashboard',
+        'ajouter_transaction': 'Ajouter une transaction',
+        'recap': 'Récapitulatif',
+    } %}
+
+    <div class="container mt-5 mb-5 dashboard-container">
+        <div class="row">
+            {# Navigation fixée à gauche #}
+            <div class="col-sm-3 py-3 border dashboard-nav">
+                <ul class="nav flex-column">
+                    {% for route, label in pages %}
+                        <li class="nav-item">
+                            <a 
+                                class="nav-link {% if loop.first %}active{% endif %}" 
+                                href="#"
+                                data-target="{{ route }}"
+                                onclick="afficherContenu(this)" {# récup le lien cliqué #}
+                                >{{ label }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="col-sm-9 py-3 ps-5">
+                <div id="content">
+                    {# Chargement du template en fonction de ce que l'utilisateur choisit dans la nav #}
+                    {% include 'dashboard/content/dashboard.html.twig' %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
