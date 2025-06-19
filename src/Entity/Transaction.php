@@ -28,8 +28,20 @@ class Transaction
     #[ORM\JoinColumn(nullable: false)]
     private ?MoyenDePaiement $moyenDePaiement = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $type = null;
+    public function getMoyenDePaiement(): ?MoyenDePaiement
+    {
+        return $this->moyenDePaiement;
+    }
+
+    public function setMoyenDePaiement(?MoyenDePaiement $moyenDePaiement): static
+    {
+        $this->moyenDePaiement = $moyenDePaiement;
+
+        return $this;
+    }
+
+    #[ORM\Column(length: 30)]
+    private string $type;
 
     public function getType(): ?string
     {
@@ -46,9 +58,6 @@ class Transaction
     #[ORM\ManyToOne(inversedBy: 'transactions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
-
-    #[ORM\Column(length: 30)]
-    private string $type;
 
     public function getUser(): ?User
     {
@@ -98,18 +107,6 @@ class Transaction
     public function setCategorie(?Categorie $categorie): static
     {
         $this->categorie = $categorie;
-
-        return $this;
-    }
-
-    public function getMoyenDePaiement(): ?MoyenDePaiement
-    {
-        return $this->moyenDePaiement;
-    }
-
-    public function setMoyenDePaiement(?MoyenDePaiement $moyenDePaiement): static
-    {
-        $this->moyenDePaiement = $moyenDePaiement;
 
         return $this;
     }
