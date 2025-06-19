@@ -32,6 +32,10 @@ final class DashboardContentController extends AbstractController
             case 'ajouter_transaction':
                 // On ajoute une nouvelle transaction
                 $transaction = new Transaction();
+
+                // On associe la transaction à l'utilisateur
+                $transaction->setUser($this->getUser());
+
                 // Création du formulaire
                 $form = $this->createForm(TransactionNewForm::class, $transaction);
 

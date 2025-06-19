@@ -25,9 +25,9 @@ class MoyenDePaiement
         return $this->user;
     }
 
-    public function setUser(int $user): static
+    public function setUser(?User $user): static
     {
-        $this->id = $id;
+         $this->user = $user;
 
         return $this;
     }
