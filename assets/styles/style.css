@@ -1,5 +1,6 @@
 :root {
     --main-color: #65bbb0;
+    --main-color-hover: #50948be2;
     --text-color: #212529bf;
 }
 
@@ -12,6 +13,10 @@ body {
 .btn-primary {
     background-color: var(--main-color);
     border: none;
+
+    &:hover {
+        background-color: var(--main-color-hover);
+    }
 }
 
 .cta-lien {
