@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,6 +15,7 @@ use App\Entity\Transaction;
 final class TransactionController extends AbstractController
 {
     #[Route('/transaction', name: 'app_transaction')]
+    #[IsGranted('ROLE_USER')] /* ce n'est qu'un user connecté qui peut créer */
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Nouvelle transaction
@@ -25,13 +27,14 @@ final class TransactionController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Enregistrement en BDD
+            // Enregistrement en BDD selon l'utilisateur connecté
+            $transaction->setUser($this->getUser());
             $entityManager->persist($transaction);
             $entityManager->flush();
-
-            // Message de succès + redirection
+            
+            // Réinitialise le form + message de succès
+            $transaction = new Transaction();
             $this->addFlash('success', 'Transaction ajoutée avec succès !');
-            // return $this->redirectToRoute('app_transaction'); TODO:
             $form = $this->createForm(TransactionNewForm::class, $transaction);
         }
 
