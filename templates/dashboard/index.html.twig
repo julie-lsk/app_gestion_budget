@@ -8,6 +8,7 @@
         'dashboard': 'Dashboard',
         'ajouter_transaction': 'Ajouter une transaction',
         'recap': 'Récapitulatif',
+        'categorie': 'Catégories'
     } %}
 
     <div class="container mt-5 mb-5 dashboard-container">
@@ -17,8 +18,8 @@
                 <ul class="nav flex-column">
                     {% for route, label in pages %}
                         <li class="nav-item">
-                            <a 
-                                class="nav-link {% if loop.first %}active{% endif %}" 
+                            <a
+                                class="nav-link {% if loop.first %}active{% endif %}"
                                 href="#"
                                 data-target="{{ route }}"
                                 onclick="afficherContenu(this)" {# récup le lien cliqué #}

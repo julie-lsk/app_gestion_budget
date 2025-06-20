@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Transaction;
 use App\Form\TransactionNewForm;
+use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,7 @@ final class DashboardContentController extends AbstractController
 {
     // "page" est déterminée selon le js
     #[Route('/dashboard/content/{page}', name: 'dashboard_content')]
-    public function loadContent(string $page, Request $request, EntityManagerInterface $entityManager): Response
+    public function loadContent(string $page, Request $request, EntityManagerInterface $entityManager, CategorieRepository $categorieRepository): Response
     {
         // Affichage des pages en fonction de la séléction dans le menu
         switch ($page) {
@@ -28,6 +29,14 @@ final class DashboardContentController extends AbstractController
             case 'recap':
                 // Renvoie le template sélectionné
                 return $this->render('dashboard/content/recap.html.twig');
+
+            case 'categorie':
+                $user = $this->getUser();
+                $categories = $categorieRepository->findBy(['user' => $user]);
+
+                return $this->render('dashboard/content/categorie.html.twig', [
+                    'categories' => $categories,
+                ]);
 
             case 'ajouter_transaction':
                 // On ajoute une nouvelle transaction
