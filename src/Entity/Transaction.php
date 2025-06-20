@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TransactionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Enum\TypeTransaction;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 class Transaction
@@ -40,18 +41,18 @@ class Transaction
         return $this;
     }
 
-    #[ORM\Column(length: 30)]
-    private string $type;
+    // Énumération = on restreint le choix du type de transaction (dépense/revenu)
+    #[ORM\Column(type: 'string', enumType: TypeTransaction::class)]
+    private TypeTransaction $type;
 
-    public function getType(): ?string
+    public function getType(): ?TypeTransaction
     {
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(TypeTransaction $type): self
     {
         $this->type = $type;
-
         return $this;
     }
 
