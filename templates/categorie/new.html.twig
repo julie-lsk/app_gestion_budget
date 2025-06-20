@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle catégorie{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <h1 class="mb-4">Créer une nouvelle catégorie</h1>
+
+        {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+        {{ form_end(form) }}
+
+        <a href="{{ path('categorie_index') }}" class="btn btn-link mt-3">⬅️ Retour à la liste</a>
+    </div>
+{% endblock %}
+
