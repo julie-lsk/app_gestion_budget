@@ -31,6 +31,11 @@
 
             <div class="col-sm-9 py-3 ps-5">
                 <div id="content">
+                    {# Message de succès pour le formulaire #}
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+
                     {# Chargement du template en fonction de ce que l'utilisateur choisit dans la nav #}
                     {% include 'dashboard/content/dashboard.html.twig' %}
                 </div>

@@ -4,14 +4,10 @@
 
 <div class="container">
      {% if form is defined %}
-        {{ form_start(form) }}
+        {{ form_start(form, { action: path('app_transaction') }) }}
         {{ form_widget(form) }}
         <button type="submit" class="btn btn-primary">Ajouter</button>
         {{ form_end(form) }}
-
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success">{{ message }}</div>
-        {% endfor %}
         
     {% else %}
         <div class="alert alert-danger">Formulaire introuvable.</div>
