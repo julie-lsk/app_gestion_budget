@@ -22,6 +22,7 @@ class RegisterFormType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Email(),
                 ],
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,  // Ne va pas directement dans l'entité User
@@ -32,6 +33,8 @@ class RegisterFormType extends AbstractType
                         'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères',
                     ]),
                 ],
+                'attr' => ['class' => 'form-control'],
+                'label' => 'Mot de passe',
             ])
         ;
     }

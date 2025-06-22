@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="container mt-5">
-        <h1 class="mb-4">Créer un compte</h1>
+        <h1 class="h3 mb-4 font-weight-normal">Créer un compte</h1>
 
         {{ form_start(registrationForm) }}
             {{ form_row(registrationForm.email) }}
@@ -14,8 +14,8 @@
             <button class="btn btn-primary">Créer mon compte</button>
         {{ form_end(registrationForm) }}
 
-        <hr>
-        <p>Vous avez déjà un compte ? <a href="{{ path('app_login') }}" class="btn btn-secondary">Se connecter</a></p>
+        <p class="mb-3 mt-5">Vous avez déjà un compte ?</p>
+        <a href="{{ path('app_login') }}" class="btn btn-secondary">Se connecter</a>
     </div>
 
 {% endblock %}
