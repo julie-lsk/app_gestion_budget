@@ -24,26 +24,32 @@ class TransactionNewForm extends AbstractType
         $builder
             ->add('montant', MoneyType::class, [
                 'required' => 'true',
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('type', ChoiceType::class, [
                 'required' => 'true',
                 'choices' => TypeTransaction::cases(), /* renvoi les 2 options revenu/dépense (de enum) */
                 'choice_label' => fn(TypeTransaction $choice) => ucfirst($choice->value),
                 'placeholder' => 'Choisissez un type',
+                'attr' => ['class' => 'form-select'],
             ])
             ->add('date', DateType::class, [
                 'required' => 'true',
+                'widget' => 'single_text',
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('categorie', EntityType::class, [
                 'class' => Categorie::class,
                 'choice_label' => 'nom',
                 'placeholder' => 'Choisissez une catégorie',
+                'attr' => ['class' => 'form-select'],
             ])
             ->add('moyenDePaiement', EntityType::class, [
                 'required' => 'true',
                 'class' => MoyenDePaiement::class,
                 'choice_label' => 'nom',
                 'placeholder' => 'Choisissez un moyen de paiement',
+                'attr' => ['class' => 'form-select'],
             ])
         ;
     }

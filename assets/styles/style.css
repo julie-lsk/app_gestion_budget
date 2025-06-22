@@ -29,3 +29,18 @@ body {
     max-width: 70px;
     height: auto;
 }
+
+/* Formulaires */
+form {
+    label {
+        margin-bottom: 0.5rem;
+    }
+    
+    input, select {
+        margin-bottom: 1.5rem;
+    }
+
+    input[type= "checkbox"] {
+        margin-right: 0.5rem;
+    }
+}

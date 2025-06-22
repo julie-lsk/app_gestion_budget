@@ -2,9 +2,9 @@
 
 <h2 class="border-bottom pb-3 mb-4 fs-3 text">Ajouter une nouvelle transaction</h2>
 
-<div class="container">
+<div class="container form-transaction">
      {% if form is defined %}
-        {{ form_start(form, { action: path('app_transaction') }) }}
+        {{ form_start(form, action: path('app_transaction')) }}
         {{ form_widget(form) }}
         <button type="submit" class="btn btn-primary">Ajouter</button>
         {{ form_end(form) }}
