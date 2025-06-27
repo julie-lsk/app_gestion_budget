@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h5 class="modal-title">Ajouter une catégorie</h5>
+    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+</div>
+<div class="modal-body">
+    {{ form_start(form, {
+        'attr': {'id': 'form-ajout-categorie'},
+        'action': path('dashboard_content_categorie_new')
+    }) }}
+    {{ form_row(form.nom) }}
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    {{ form_end(form) }}
+</div>
+

@@ -44,4 +44,33 @@
 
         </div>
     </div>
+
+    <div class="modal fade" id="modal-ajout-categorie" tabindex="-1" aria-labelledby="modalAjoutLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="modal-ajout-categorie-content">
+            </div>
+        </div>
+    </div>
+    <script>
+        setTimeout(function() {
+            let alert = document.getElementById('alert-success');
+            if (alert) {
+                var alertInstance = bootstrap.Alert.getOrCreateInstance(alert);
+                alertInstance.close();
+            }
+        }, 1500);
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Vérifie si l'URL contient #categorie
+            if(window.location.hash === "#categorie") {
+                // Trouve le lien sidebar pour "Catégories"
+                const catLink = document.querySelector('[data-target="categorie"]');
+                if (catLink) {
+                    catLink.click(); // Simule le clic, appelle afficherContenu
+                }
+            }
+        });
+    </script>
+
+
 {% endblock %}
