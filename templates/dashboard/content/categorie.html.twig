@@ -1,9 +1,13 @@
-{# templates/dashboard/content/categorie.html.twig #}
+<div id="alert-zone"></div>
 
 <h2 class="border-bottom pb-3 mb-4 fs-3 text">Catégories</h2>
 
-<div class="container"></div>
+<div class="container my-5">
+    <div class="mb-3 text-end">
+        <button type="button" class="btn btn-primary mt-4 mb-5" onclick="ouvrirModalAjoutCategorie()">➕ Ajouter une catégorie</button>
+    </div>
+    {% include 'dashboard/content/_categorie_list.html.twig' %}
+</div>
 
-{% include 'categorie/index.html.twig' %}
 
 

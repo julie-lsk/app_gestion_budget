@@ -57,4 +57,37 @@ final class DashboardContentController extends AbstractController
                 throw $this->createNotFoundException("Page '{$page}' non reconnue.");
         }
     }
+    #[Route('/dashboard/content/categorie/new', name: 'dashboard_content_categorie_new', methods: ['GET', 'POST'])]
+    public function newCategorieModal(
+        Request $request,
+        EntityManagerInterface $em,
+        \App\Repository\CategorieRepository $repo // ← à ajouter ici si absent !
+    ): Response
+    {
+        $categorie = new \App\Entity\Categorie();
+        $categorie->setUser($this->getUser());
+        $form = $this->createForm(\App\Form\CategorieType::class, $categorie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($categorie);
+            $em->flush();
+
+            // Rendu du HTML de la liste à jour
+            $categories = $repo->findBy(['user' => $this->getUser()]);
+            $listHtml = $this->renderView('dashboard/content/_categorie_list.html.twig', [
+                'categories' => $categories,
+            ]);
+
+            return $this->json([
+                'success' => true,
+                'message' => 'Catégorie enregistrée avec succès !',
+                'listHtml' => $listHtml,
+            ]);
+        }
+
+        return $this->render('dashboard/content/_categorie_new_modal.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 }
