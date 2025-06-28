@@ -72,5 +72,23 @@
         });
     </script>
 
+    <div class="modal fade" id="modal-confirm-suppression" tabindex="-1" aria-labelledby="modalConfirmSuppressionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConfirmSuppressionLabel">Confirmation de suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    Es-tu sûr(e) de vouloir supprimer cette catégorie ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" id="btn-confirm-suppression" class="btn btn-danger">Supprimer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 {% endblock %}

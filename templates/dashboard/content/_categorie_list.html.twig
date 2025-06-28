@@ -4,8 +4,18 @@
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 {{ categorie.nom }}
                 <div>
-                    <a href="{{ path('categorie_edit', {'id': categorie.id}) }}" class="btn btn-sm btn-outline-primary">✏️ Modifier</a>
-                    <a href="{{ path('categorie_delete', {'id': categorie.id}) }}" class="btn btn-sm btn-outline-danger">🗑️ Supprimer</a>
+                    <a href="#"
+                       class="btn btn-sm btn-outline-primary btn-modifier-categorie"
+                       data-id="{{ categorie.id }}">
+                        ✏️ Modifier
+                    </a>
+                    <button
+                        class="btn btn-sm btn-outline-danger btn-supprimer-categorie"
+                        data-id="{{ categorie.id }}"
+                        data-token="{{ csrf_token('delete-categorie-' ~ categorie.id) }}"
+                    >
+                        🗑️ Supprimer
+                    </button>
                 </div>
             </li>
         {% endfor %}
@@ -13,3 +23,4 @@
         <li class="list-group-item">Aucune catégorie enregistrée.</li>
     {% endif %}
 </ul>
+
