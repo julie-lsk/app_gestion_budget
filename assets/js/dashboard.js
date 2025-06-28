@@ -43,6 +43,22 @@ window.ouvrirModalAjoutCategorie = function() {
         });
 };
 
+window.ouvrirModalEditCategorie = function(id) {
+    const modal = new bootstrap.Modal(document.getElementById('modal-ajout-categorie'));
+    const modalContent = document.getElementById('modal-ajout-categorie-content');
+    modalContent.innerHTML = '<p>Chargement...</p>';
+
+    fetch(`/dashboard/content/categorie/edit/${id}`)
+        .then(response => response.text())
+        .then(html => {
+            modalContent.innerHTML = html;
+            modal.show();
+        })
+        .catch(() => {
+            modalContent.innerHTML = '<div class="alert alert-danger">Erreur de chargement du formulaire.</div>';
+        });
+};
+
 document.addEventListener('submit', function (e) {
     // On cible uniquement le formulaire du modal
     if (e.target && e.target.id === 'form-ajout-categorie') {
@@ -61,18 +77,15 @@ document.addEventListener('submit', function (e) {
             .then(response => response.json())
             .then(result => {
                 if (result.success) {
-                    // Met à jour la liste sans recharger la page
-                    // (adapte le selecteur selon où tu affiches la liste)
+
                     const liste = document.querySelector('.list-group');
                     if (liste) {
                         liste.outerHTML = result.listHtml;
                     }
 
-                    // Ferme le modal Bootstrap
                     const modal = bootstrap.Modal.getInstance(document.getElementById('modal-ajout-categorie'));
                     if (modal) modal.hide();
 
-                    // Affiche le message de succès
                     afficherAlertSucces(result.message);
                 }
             })
@@ -82,8 +95,51 @@ document.addEventListener('submit', function (e) {
     }
 });
 
+document.addEventListener('click', function (e) {
+    if (e.target && e.target.classList.contains('btn-modifier-categorie')) {
+        e.preventDefault();
+        const id = e.target.getAttribute('data-id');
+        window.ouvrirModalEditCategorie(id);
+    }
+});
+
+document.addEventListener('submit', function (e) {
+    if (e.target && e.target.id === 'form-edit-categorie') {
+        e.preventDefault();
+        const form = e.target;
+        const data = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: data,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // Met à jour la liste des catégories
+                    const liste = document.querySelector('.list-group');
+                    if (liste) {
+                        liste.outerHTML = result.listHtml;
+                    }
+
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modal-ajout-categorie'));
+                    if (modal) modal.hide();
+
+                    afficherAlertSucces(result.message);
+                } else {
+                    alert(result.message || "Erreur lors de la modification.");
+                }
+            })
+            .catch(() => {
+                alert("Erreur lors de la modification.");
+            });
+    }
+});
+
 function afficherAlertSucces(message) {
-    // Ajoute le message dans #alert-zone (toujours présent)
     const zone = document.getElementById('alert-zone');
     if (zone) {
         zone.innerHTML = `
@@ -103,4 +159,47 @@ function afficherAlertSucces(message) {
     }
 }
 
+let categorieIdToDelete = null;
+let categorieTokenToDelete = null;
+
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('btn-supprimer-categorie')) {
+        e.preventDefault();
+        categorieIdToDelete = e.target.getAttribute('data-id');
+        categorieTokenToDelete = e.target.getAttribute('data-token');
+        const modal = new bootstrap.Modal(document.getElementById('modal-confirm-suppression'));
+        modal.show();
+    }
+});
+
+document.getElementById('btn-confirm-suppression').addEventListener('click', function() {
+    if (!categorieIdToDelete || !categorieTokenToDelete) return;
+
+    fetch(`/categorie/${categorieIdToDelete}/delete`, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ _token: categorieTokenToDelete })
+    })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                // Met à jour la liste, SANS recharger toute la vue !
+                const liste = document.querySelector('.list-group');
+                if (liste) {
+                    liste.outerHTML = result.listHtml;
+                }
+                // Ferme le modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modal-confirm-suppression'));
+                if (modal) modal.hide();
+                // Affiche le message de succès
+                afficherAlertSucces(result.message || 'Catégorie supprimée avec succès !');
+            } else {
+                alert(result.message || "Erreur lors de la suppression.");
+            }
+        })
+        .catch(() => alert("Erreur lors de la suppression."));
+});
 

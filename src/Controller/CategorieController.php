@@ -59,11 +59,36 @@ class CategorieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'categorie_delete')]
-    public function delete(EntityManagerInterface $em, Categorie $categorie): Response
-    {
+    #[Route('/{id}/delete', name: 'categorie_delete', methods: ['POST'])]
+    public function delete(
+        Request $request,
+        EntityManagerInterface $em,
+        Categorie $categorie,
+        CategorieRepository $repo
+    ): Response {
+        if ($categorie->getUser() !== $this->getUser()) {
+            return $this->json(['success' => false, 'message' => "Accès refusé."], 403);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        $token = $data['_token'] ?? null;
+
+        if (!$this->isCsrfTokenValid('delete-categorie-' . $categorie->getId(), $token)) {
+            return $this->json(['success' => false, 'message' => "Jeton CSRF invalide."], 400);
+        }
+
         $em->remove($categorie);
         $em->flush();
-        return $this->redirectToRoute('categorie_index');
+
+        $categories = $repo->findBy(['user' => $this->getUser()]);
+        $listHtml = $this->renderView('dashboard/content/_categorie_list.html.twig', [
+            'categories' => $categories,
+        ]);
+
+        return $this->json([
+            'success' => true,
+            'message' => "Catégorie supprimée avec succès !",
+            'listHtml' => $listHtml,
+        ]);
     }
 }
