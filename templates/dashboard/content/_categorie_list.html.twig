@@ -1,0 +1,26 @@
+<ul class="list-group">
+    {% if categories|length > 0 %}
+        {% for categorie in categories %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ categorie.nom }}
+                <div>
+                    <a href="#"
+                       class="btn btn-sm btn-outline-primary btn-modifier-categorie"
+                       data-id="{{ categorie.id }}">
+                        ✏️ Modifier
+                    </a>
+                    <button
+                        class="btn btn-sm btn-outline-danger btn-supprimer-categorie"
+                        data-id="{{ categorie.id }}"
+                        data-token="{{ csrf_token('delete-categorie-' ~ categorie.id) }}"
+                    >
+                        🗑️ Supprimer
+                    </button>
+                </div>
+            </li>
+        {% endfor %}
+    {% else %}
+        <li class="list-group-item">Aucune catégorie enregistrée.</li>
+    {% endif %}
+</ul>
+

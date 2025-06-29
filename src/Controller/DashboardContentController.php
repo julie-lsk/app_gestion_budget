@@ -57,4 +57,77 @@ final class DashboardContentController extends AbstractController
                 throw $this->createNotFoundException("Page '{$page}' non reconnue.");
         }
     }
+    #[Route('/dashboard/content/categorie/new', name: 'dashboard_content_categorie_new', methods: ['GET', 'POST'])]
+    public function newCategorieModal(
+        Request $request,
+        EntityManagerInterface $em,
+        \App\Repository\CategorieRepository $repo // ← à ajouter ici si absent !
+    ): Response
+    {
+        $categorie = new \App\Entity\Categorie();
+        $categorie->setUser($this->getUser());
+        $form = $this->createForm(\App\Form\CategorieType::class, $categorie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($categorie);
+            $em->flush();
+
+            // Rendu du HTML de la liste à jour
+            $categories = $repo->findBy(['user' => $this->getUser()]);
+            $listHtml = $this->renderView('dashboard/content/_categorie_list.html.twig', [
+                'categories' => $categories,
+            ]);
+
+            return $this->json([
+                'success' => true,
+                'message' => 'Catégorie enregistrée avec succès !',
+                'listHtml' => $listHtml,
+            ]);
+        }
+
+        return $this->render('dashboard/content/_categorie_new_modal.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/dashboard/content/categorie/edit/{id}', name: 'dashboard_content_categorie_edit', methods: ['GET', 'POST'])]
+    public function editCategorieModal(
+        Request $request,
+        EntityManagerInterface $em,
+        CategorieRepository $repo,
+        int $id
+    ): Response {
+        $categorie = $repo->find($id);
+
+        // Vérification que la catégorie appartient à l’utilisateur connecté
+        if (!$categorie || $categorie->getUser() !== $this->getUser()) {
+            return $this->json(['success' => false, 'message' => "Catégorie non trouvée."], 404);
+        }
+
+        $form = $this->createForm(\App\Form\CategorieType::class, $categorie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            // Recharge la liste à jour (comme pour l’ajout)
+            $categories = $repo->findBy(['user' => $this->getUser()]);
+            $listHtml = $this->renderView('dashboard/content/_categorie_list.html.twig', [
+                'categories' => $categories,
+            ]);
+            return $this->json([
+                'success' => true,
+                'message' => 'Catégorie modifiée avec succès !',
+                'listHtml' => $listHtml,
+            ]);
+        }
+
+        return $this->render('dashboard/content/_categorie_edit_modal.html.twig', [
+            'form' => $form->createView(),
+            'categorie' => $categorie,
+        ]);
+    }
+
+
 }
