@@ -15,27 +15,20 @@ use App\Entity\Transaction;
 final class TransactionController extends AbstractController
 {
     #[Route('/transaction', name: 'app_transaction')]
-    #[IsGranted('ROLE_USER')] /* ce n'est qu'un user connecté qui peut créer */
+    #[IsGranted('ROLE_USER')]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Nouvelle transaction
         $transaction = new Transaction();
-
-        // Création du formulaire associé
         $form = $this->createForm(TransactionNewForm::class, $transaction);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // Enregistrement en BDD selon l'utilisateur connecté
             $transaction->setUser($this->getUser());
             $entityManager->persist($transaction);
             $entityManager->flush();
-            
-            // Réinitialise le form + message de succès
-            $transaction = new Transaction();
+
             $this->addFlash('success', 'Transaction ajoutée avec succès !');
-            $form = $this->createForm(TransactionNewForm::class, $transaction);
+            return $this->redirectToRoute('app_transaction');
         }
 
         return $this->render('dashboard/index.html.twig', [
