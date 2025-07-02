@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\MoyenDePaiementRepository;
+use App\Form\Repository\MoyenDePaiementRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MoyenDePaiementRepository::class)]

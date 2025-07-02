@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\TransactionRepository;
+use App\Enum\TypeTransaction;
+use App\Form\Repository\TransactionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Enum\TypeTransaction;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 class Transaction

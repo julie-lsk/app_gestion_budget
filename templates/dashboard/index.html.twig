@@ -37,8 +37,17 @@
                         <div class="alert alert-success">{{ message }}</div>
                     {% endfor %}
 
-                    {# Chargement du template en fonction de ce que l'utilisateur choisit dans la nav #}
-                    {% include 'dashboard/content/dashboard.html.twig' %}
+                    {% include 'dashboard/content/dashboard.html.twig' with {
+                        revenusLabels: revenusLabels,
+                        revenusData: revenusData,
+                        depensesLabels: depensesLabels,
+                        depensesData: depensesData,
+                        depensesCategorieLabels: depensesCategorieLabels,
+                        depensesCategorieData: depensesCategorieData,
+                        revenusCategorieLabels: revenusCategorieLabels,
+                        revenusCategorieData: revenusCategorieData
+                    } %}
+
                 </div>
             </div>
 

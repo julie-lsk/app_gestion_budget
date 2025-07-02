@@ -3,31 +3,52 @@
 namespace App\Controller;
 
 use App\Entity\Transaction;
+use App\Form\Repository\CategorieRepository;
 use App\Form\TransactionNewForm;
-use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-
 // Charge les différentes pages du dashboard
-// Prépare la vue du formulaire --> ne traîte pas les données (traîtées par TransactionController)
 final class DashboardContentController extends AbstractController
 {
-    // "page" est déterminée selon le js
+    // "page" est déterminée selon le JS
     #[Route('/dashboard/content/{page}', name: 'dashboard_content')]
-    public function loadContent(string $page, Request $request, EntityManagerInterface $entityManager, CategorieRepository $categorieRepository): Response
-    {
-        // Affichage des pages en fonction de la séléction dans le menu
+    public function loadContent(
+        string $page,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        CategorieRepository $categorieRepository
+    ): Response {
         switch ($page) {
             case 'dashboard':
-                // Renvoie le template sélectionné
-                return $this->render('dashboard/content/dashboard.html.twig');
+                // DONNÉES DE TEST pour tous les graphiques (aucune variable manquante !)
+                $revenusLabels = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'];
+                $revenusData = [1200, 1300, 1250, 1400, 1350, 1450];
+
+                $depensesLabels = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'];
+                $depensesData = [900, 1100, 950, 1200, 1000, 1100];
+
+                $depensesCategorieLabels = ['Loyer', 'Courses', 'Transport', 'Santé', 'Autres'];
+                $depensesCategorieData = [700, 350, 150, 100, 200];
+
+                $revenusCategorieLabels = ['Salaire', 'Allocations', 'Ventes', 'Autres'];
+                $revenusCategorieData = [1200, 350, 250, 100];
+
+                return $this->render('dashboard/content/dashboard.html.twig', [
+                    'revenusLabels' => json_encode($revenusLabels),
+                    'revenusData' => json_encode($revenusData),
+                    'depensesLabels' => json_encode($depensesLabels),
+                    'depensesData' => json_encode($depensesData),
+                    'depensesCategorieLabels' => json_encode($depensesCategorieLabels),
+                    'depensesCategorieData' => json_encode($depensesCategorieData),
+                    'revenusCategorieLabels' => json_encode($revenusCategorieLabels),
+                    'revenusCategorieData' => json_encode($revenusCategorieData),
+                ]);
 
             case 'recap':
-                // Renvoie le template sélectionné
                 return $this->render('dashboard/content/recap.html.twig');
 
             case 'categorie':
@@ -39,16 +60,10 @@ final class DashboardContentController extends AbstractController
                 ]);
 
             case 'ajouter_transaction':
-                // On ajoute une nouvelle transaction
                 $transaction = new Transaction();
-
-                // On associe la transaction à l'utilisateur
                 $transaction->setUser($this->getUser());
-
-                // Création du formulaire
                 $form = $this->createForm(TransactionNewForm::class, $transaction);
 
-                // On l'affiche sur le template twig
                 return $this->render('dashboard/content/ajouter_transaction.html.twig', [
                     'form' => $form->createView(),
                 ]);
@@ -57,13 +72,13 @@ final class DashboardContentController extends AbstractController
                 throw $this->createNotFoundException("Page '{$page}' non reconnue.");
         }
     }
+
     #[Route('/dashboard/content/categorie/new', name: 'dashboard_content_categorie_new', methods: ['GET', 'POST'])]
     public function newCategorieModal(
         Request $request,
         EntityManagerInterface $em,
-        \App\Repository\CategorieRepository $repo // ← à ajouter ici si absent !
-    ): Response
-    {
+        \App\Form\Repository\CategorieRepository $repo
+    ): Response {
         $categorie = new \App\Entity\Categorie();
         $categorie->setUser($this->getUser());
         $form = $this->createForm(\App\Form\CategorieType::class, $categorie);
@@ -73,7 +88,6 @@ final class DashboardContentController extends AbstractController
             $em->persist($categorie);
             $em->flush();
 
-            // Rendu du HTML de la liste à jour
             $categories = $repo->findBy(['user' => $this->getUser()]);
             $listHtml = $this->renderView('dashboard/content/_categorie_list.html.twig', [
                 'categories' => $categories,
@@ -100,7 +114,6 @@ final class DashboardContentController extends AbstractController
     ): Response {
         $categorie = $repo->find($id);
 
-        // Vérification que la catégorie appartient à l’utilisateur connecté
         if (!$categorie || $categorie->getUser() !== $this->getUser()) {
             return $this->json(['success' => false, 'message' => "Catégorie non trouvée."], 404);
         }
@@ -111,7 +124,6 @@ final class DashboardContentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
 
-            // Recharge la liste à jour (comme pour l’ajout)
             $categories = $repo->findBy(['user' => $this->getUser()]);
             $listHtml = $this->renderView('dashboard/content/_categorie_list.html.twig', [
                 'categories' => $categories,
@@ -128,6 +140,4 @@ final class DashboardContentController extends AbstractController
             'categorie' => $categorie,
         ]);
     }
-
-
 }
