@@ -18,7 +18,9 @@ final class DashboardController extends AbstractController
     public function index(string $section, Request $request, EntityManagerInterface $em): Response
     {
         $transaction = new Transaction();
-        $form = $this->createForm(TransactionNewForm::class, $transaction);
+        $form = $this->createForm(TransactionNewForm::class, $transaction, [
+            'user' => $this->getUser(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -46,7 +46,9 @@ final class DashboardContentController extends AbstractController
                 $transaction->setUser($this->getUser());
 
                 // Création du formulaire
-                $form = $this->createForm(TransactionNewForm::class, $transaction);
+                $form = $this->createForm(TransactionNewForm::class, $transaction, [
+                    'user' => $this->getUser(), // 👈 indispensable
+                ]);
 
                 // On l'affiche sur le template twig
                 return $this->render('dashboard/content/ajouter_transaction.html.twig', [

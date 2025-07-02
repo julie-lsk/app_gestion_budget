@@ -18,6 +18,8 @@ class TransactionNewForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $user = $options['user'];
+
         $builder
             ->add('montant', MoneyType::class, [
                 'required' => true,
@@ -41,6 +43,12 @@ class TransactionNewForm extends AbstractType
                 'choice_label' => 'nom',
                 'placeholder' => 'Choisissez une catégorie',
                 'attr' => ['class' => 'form-select'],
+                'query_builder' => function (\App\Repository\CategorieRepository $repo) use ($user) {
+                    return $repo->createQueryBuilder('c')
+                        ->where('c.user = :user')
+                        ->setParameter('user', $user)
+                        ->orderBy('c.nom', 'ASC');
+                },
             ])
             ->add('moyenDePaiement', EntityType::class, [
                 'required' => true,
@@ -48,14 +56,20 @@ class TransactionNewForm extends AbstractType
                 'choice_label' => 'nom',
                 'placeholder' => 'Choisissez un moyen de paiement',
                 'attr' => ['class' => 'form-select'],
-            ])
-        ;
-    }
+                'query_builder' => function (\App\Repository\MoyenDePaiementRepository $repo) use ($user) {
+                    return $repo->createQueryBuilder('m')
+                        ->where('m.user = :user')
+                        ->setParameter('user', $user)
+                        ->orderBy('m.nom', 'ASC');
 
+                },
+            ]);
+    }
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Transaction::class,
+            'user' => null,
         ]);
     }
 }
