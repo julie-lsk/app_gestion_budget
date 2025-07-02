@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ajouter un moyen{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white d-flex align-items-center">
+                <i class="bi bi-credit-card-2-front-fill me-2"></i>
+                Ajouter un moyen de paiement
+            </div>
+            {{ include('moyen_de_paiement/_form.html.twig', {
+                form: form,
+                button_label: 'Créer'
+            }) }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}Modifier un moyen{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark d-flex align-items-center">
+                <i class="bi bi-pencil-fill me-2"></i>
+                Modifier « {{ moyen.nom }} »
+            </div>
+            {{ include('moyen_de_paiement/_form.html.twig', {
+                form: form,
+                button_label: 'Mettre à jour'
+            }) }}
+        </div>
+    </div>
+{% endblock %}

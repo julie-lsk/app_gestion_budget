@@ -1,0 +1,66 @@
+{# templates/dashboard/content/edit_note.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la note{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow border-0 rounded">
+                    <div class="card-header bg-warning text-white">
+                        <h4 class="mb-0">Modifier une note</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        {{ form_start(form, {
+                            attr: {'class':'needs-validation','novalidate':'novalidate'},
+                            action: path('dashboard_content_note_edit', {'id': note.id})
+                        }) }}
+
+                        <div class="mb-3">
+                            {{ form_label(form.title, 'Titre', {'label_attr': {'class':'form-label'}}) }}
+                            {{ form_widget(form.title, {'attr': {'class':'form-control','placeholder':'Entrez un titre'}}) }}
+                            <div class="invalid-feedback">Veuillez entrer un titre.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.content, 'Contenu', {'label_attr': {'class':'form-label'}}) }}
+                            {{ form_widget(form.content, {'attr': {'class':'form-control','rows':4,'placeholder':'Entrez le contenu de votre note'}}) }}
+                            <div class="invalid-feedback">Veuillez entrer un contenu.</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning w-100">Mettre à jour</button>
+                        <a href="#"
+                           class="btn btn-secondary w-100 mt-2"
+                           onclick="event.preventDefault(); document.querySelector('.dashboard-nav a[data-target=\'note\']').click();">
+                            Retour
+                        </a>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .form-control:invalid { border-color: #dc3545; }
+        .form-control:valid   { border-color: #198754; }
+    </style>
+
+    <script>
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.forEach.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+{% endblock %}
