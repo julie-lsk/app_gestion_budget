@@ -31,7 +31,7 @@ final class TransactionController extends AbstractController
             $transaction->setUser($this->getUser());
             $entityManager->persist($transaction);
             $entityManager->flush();
-            
+
             // Réinitialise le form + message de succès
             $transaction = new Transaction();
             $this->addFlash('success', 'Transaction ajoutée avec succès !');
@@ -42,4 +42,5 @@ final class TransactionController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 }

@@ -37,8 +37,6 @@
                         <div class="alert alert-success">{{ message }}</div>
                     {% endfor %}
 
-                    {# Chargement du template en fonction de ce que l'utilisateur choisit dans la nav #}
-                    {% include 'dashboard/content/dashboard.html.twig' %}
                 </div>
             </div>
 
@@ -61,15 +59,23 @@
         }, 1500);
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Vérifie si l'URL contient #categorie
-            if(window.location.hash === "#categorie") {
-                // Trouve le lien sidebar pour "Catégories"
-                const catLink = document.querySelector('[data-target="categorie"]');
-                if (catLink) {
-                    catLink.click(); // Simule le clic, appelle afficherContenu
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1); // enleve le '#'
+                const navLink = document.querySelector('[data-target="' + hash + '"]');
+                if (navLink) {
+                    navLink.click();
                 }
             }
         });
+
+        window.addEventListener("hashchange", function() {
+            const hash = window.location.hash.substring(1);
+            const navLink = document.querySelector('[data-target="' + hash + '"]');
+            if (navLink) {
+                navLink.click();
+            }
+        });
+
     </script>
 
     <div class="modal fade" id="modal-confirm-suppression" tabindex="-1" aria-labelledby="modalConfirmSuppressionLabel" aria-hidden="true">
