@@ -3,27 +3,28 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-
     {% set pages = {
-        'dashboard': 'Dashboard',
-        'ajouter_transaction': 'Ajouter une transaction',
-        'recap': 'Récapitulatif',
-        'categorie': 'Catégories'
+        'dashboard'           : 'Dashboard',
+        'ajouter_transaction' : 'Ajouter une transaction',
+        'recap'               : 'Récapitulatif',
+        'categorie'           : 'Catégories',
+        'note'                : 'Notes'
     } %}
 
     <div class="container mt-5 mb-5 dashboard-container">
         <div class="row">
-            {# Navigation fixée à gauche #}
+            {# 2) sidebar #}
             <div class="col-sm-3 py-3 border dashboard-nav">
                 <ul class="nav flex-column">
                     {% for route, label in pages %}
                         <li class="nav-item">
                             <a
-                                class="nav-link {% if loop.first %}active{% endif %}"
                                 href="#"
+                                class="nav-link {% if route == currentPage %}border border-dark rounded{% endif %}"
                                 data-target="{{ route }}"
-                                onclick="afficherContenu(this)" {# récup le lien cliqué #}
-                                >{{ label }}
+                                onclick="afficherContenu(this)"
+                            >
+                                {{ label }}
                             </a>
                         </li>
                     {% endfor %}
@@ -32,63 +33,53 @@
 
             <div class="col-sm-9 py-3 ps-5">
                 <div id="content">
-                    {# Message de succès pour le formulaire #}
+                    {# affichage des messages de succès #}
                     {% for message in app.flashes('success') %}
                         <div class="alert alert-success">{{ message }}</div>
                     {% endfor %}
 
-                    {# Chargement du template en fonction de ce que l'utilisateur choisit dans la nav #}
-                    {% include 'dashboard/content/dashboard.html.twig' %}
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="modal fade" id="modal-ajout-categorie" tabindex="-1" aria-labelledby="modalAjoutLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" id="modal-ajout-categorie-content">
-            </div>
-        </div>
-    </div>
-    <script>
-        setTimeout(function() {
-            let alert = document.getElementById('alert-success');
-            if (alert) {
-                var alertInstance = bootstrap.Alert.getOrCreateInstance(alert);
-                alertInstance.close();
-            }
-        }, 1500);
-
-        document.addEventListener("DOMContentLoaded", function() {
-            // Vérifie si l'URL contient #categorie
-            if(window.location.hash === "#categorie") {
-                // Trouve le lien sidebar pour "Catégories"
-                const catLink = document.querySelector('[data-target="categorie"]');
-                if (catLink) {
-                    catLink.click(); // Simule le clic, appelle afficherContenu
-                }
-            }
-        });
-    </script>
-
-    <div class="modal fade" id="modal-confirm-suppression" tabindex="-1" aria-labelledby="modalConfirmSuppressionLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalConfirmSuppressionLabel">Confirmation de suppression</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                </div>
-                <div class="modal-body">
-                    Es-tu sûr(e) de vouloir supprimer cette catégorie ?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" id="btn-confirm-suppression" class="btn btn-danger">Supprimer</button>
+                    {# chargement initial via currentPage #}
+                    {% include 'dashboard/content/' ~ currentPage ~ '.html.twig' %}
                 </div>
             </div>
         </div>
     </div>
 
+    {# 4) modals partagés #}
+    {% block extra_content %}
+        <div class="modal fade" id="modal-ajout-categorie" tabindex="-1" aria-labelledby="modalAjoutLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" id="modal-ajout-categorie-content"></div>
+            </div>
+        </div>
 
+        <div class="modal fade" id="modal-confirm-suppression" tabindex="-1" aria-labelledby="modalConfirmSuppressionLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalConfirmSuppressionLabel">Confirmation de suppression</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        Es-tu sûr(e) de vouloir supprimer cette catégorie ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" id="btn-confirm-suppression" class="btn btn-danger">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# auto-fermeture des alertes #}
+        <script>
+            setTimeout(function() {
+                var alerts = document.querySelectorAll('.alert-success');
+                alerts.forEach(a => {
+                    var ins = bootstrap.Alert.getOrCreateInstance(a);
+                    ins.close();
+                });
+            }, 1500);
+        </script>
+    {% endblock %}
 {% endblock %}
