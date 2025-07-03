@@ -30,6 +30,10 @@ body {
     height: auto;
 }
 
+.dashboard-grid .row {
+    gap: 1rem;
+}
+
 /* Formulaires */
 form {
     label {
