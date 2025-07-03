@@ -28,6 +28,7 @@ function activerFiltresTransactions() {
     const typeFilter = document.getElementById('filter-type');
     const categorieFilter = document.getElementById('filter-categorie');
     const button = document.getElementById('filter-button');
+    const resetButton = document.getElementById('reset-button');
     const rows = document.querySelectorAll('#transactions-table tbody tr');
 
     if (button && typeFilter && categorieFilter && rows.length > 0) {
@@ -45,6 +46,18 @@ function activerFiltresTransactions() {
                 row.style.display = (typeMatches && categoryMatches) ? '' : 'none';
             });
         });
+    }
+
+    // Bouton de réinitialisation des filtres
+    if (resetButton) {
+        resetButton.onclick = () => {
+            typeFilter.value = '';
+            categorieFilter.value = '';
+
+            rows.forEach(row => {
+                row.style.display = ''; /* on réaffiche touts */
+            });
+        };
     }
 }
 
