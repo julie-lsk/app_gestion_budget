@@ -48,8 +48,10 @@
                 .then(response => response.json())
                 .then(data => {
                     // 1. Bar chart - Revenus par mois
-                    const revenusLabels = data.revenusParMois.map(entry => `Mois ${entry.mois}`);
-                    const revenusData = data.revenusParMois.map(entry => entry.total);
+                    const moisNoms = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+                    const revenusSorted = data.revenusParMois.sort((a, b) => a.mois - b.mois);
+                    const revenusLabels = revenusSorted.map(entry => moisNoms[entry.mois - 1]);
+                    const revenusData = revenusSorted.map(entry => entry.total);
 
                     new Chart(document.getElementById('revenusChart'), {
                         type: 'bar',
@@ -65,8 +67,9 @@
                     });
 
                     // 2. Line chart - Dépenses par mois
-                    const depensesLabels = data.depensesParMois.map(entry => `Mois ${entry.mois}`);
-                    const depensesData = data.depensesParMois.map(entry => entry.total);
+                    const depensesSorted = data.depensesParMois.sort((a, b) => a.mois - b.mois);
+                    const depensesLabels = depensesSorted.map(entry => moisNoms[entry.mois - 1]);
+                    const depensesData = depensesSorted.map(entry => entry.total);
 
                     new Chart(document.getElementById('depensesChart'), {
                         type: 'line',
