@@ -1,0 +1,38 @@
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% if notes is empty %}
+        <div class="alert alert-warning text-center">Aucune note pour le moment.</div>
+    {% else %}
+        {% for note in notes %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ note.title }}</h5>
+                        <p class="card-text">
+                            {{ note.content|length > 100
+                            ? note.content|slice(0,100) ~ '…'
+                            : note.content
+                            }}
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent text-end">
+                        <form method="post"
+                               action="{{ path('dashboard_content_note_delete', {'id': note.id}) }}"
+                              onsubmit="return confirm('Confirmer la suppression ?')">
+                            <input type="hidden"
+                                   name="token"
+                                   value="{{ csrf_token('delete' ~ note.id) }}">
+                            <button type="submit"
+                                    class="btn btn-sm btn-outline-danger">
+                                    Supprimer
+                            </button>
+                            </form>
+                        <a href="{{ path('dashboard_content_note_edit', {'id':note.id}) }}"
+                           class="btn btn-sm btn-outline-secondary ms-2">
+                            Modifier
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

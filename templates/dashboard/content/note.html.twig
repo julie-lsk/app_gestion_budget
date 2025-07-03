@@ -1,0 +1,8 @@
+<div class="container mt-5">
+    <div class="mb-3 text-end">
+        <a href="{{ path('dashboard_content_note_new') }}" class="btn btn-primary mt-4 mb-5">
+            ➕ Ajouter une note
+        </a>
+    </div>
+    {% include 'dashboard/content/_note_list.html.twig' with {'notes': notes} %}
+</div>

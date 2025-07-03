@@ -1,0 +1,28 @@
+{{ form_start(form, {
+    attr: { class: 'needs-validation card-body' },
+    novalidate: 'novalidate'
+}) }}
+<div class="mb-3">
+    {{ form_label(form.nom, 'Nom du moyen', { label_attr: { class: 'form-label' } }) }}
+    {{ form_widget(form.nom, {
+        attr: {
+            class: 'form-control',
+            placeholder: 'Nom du moyen'
+        }
+    }) }}
+    {{ form_errors(form.nom) }}
+</div>
+
+<div class="d-flex justify-content-between align-items-center mt-4">
+    <a href="{{ path('moyen_index') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Retour
+    </a>
+    <button type="submit" class="btn btn-success">
+        {% if button_label is defined and button_label == 'Mettre à jour' %}
+            <i class="bi bi-pencil-fill"></i> Mettre à jour
+        {% else %}
+            <i class="bi bi-check2-circle"></i> Créer
+        {% endif %}
+    </button>
+</div>
+{{ form_end(form) }}
