@@ -7,8 +7,10 @@ use App\Form\NoteType;
 use App\Entity\Transaction;
 use App\Form\TransactionNewForm;
 use App\Repository\CategorieRepository;
+use App\Repository\TransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -29,8 +31,18 @@ final class DashboardContentController extends AbstractController
                 return $this->render('dashboard/content/dashboard.html.twig');
 
             case 'recap':
-                // Renvoie le template sélectionné
-                return $this->render('dashboard/content/recap.html.twig');
+                $user = $this->getUser();
+
+                if (!$user) {
+                    throw $this->createAccessDeniedException('Utilisateur non connecté');
+                }
+                $transactions = $entityManager->getRepository(Transaction::class)
+                    ->findBy(['user' => $user], ['date' => 'DESC']);
+
+                return $this->render('dashboard/content/recap.html.twig', [
+                    'transactions' => $transactions,
+                ]);
+
 
             case 'categorie':
                 $user = $this->getUser();
@@ -201,6 +213,5 @@ final class DashboardContentController extends AbstractController
             'categorie' => $categorie,
         ]);
     }
-
 
 }
