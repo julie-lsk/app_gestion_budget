@@ -6,14 +6,15 @@
         <div class="row mb-4">
             <div class="col border p-3 shadow-sm bg-light me-3">
                 <h3 class="mb-3 fw-bold">Mes revenus</h3>
-
-                <p>chart à mettre</p>
+                <div>
+                    <canvas id="revenusChart" width="400" height="150"></canvas>
+                </div>
             </div>
-
             <div class="col border p-3 shadow-sm bg-light">
                 <h3 class="mb-3 fw-bold">Mes dépenses</h3>
-
-                <p>chart à mettre</p>
+                <div>
+                    <canvas id="depensesChart" width="400" height="150"></canvas>
+                </div>
             </div>
         </div>
 
@@ -27,15 +28,85 @@
             <div class="col border p-3 shadow-sm bg-light me-3">
                 <h3 class="mb-3 fw-bold">Mes dépenses par catégorie</h3>
 
-                <p>chart à mettre</p>
+                <div>
+                    <canvas id="depensesCategorieChart" width="350" height="150"></canvas>
+                </div>
             </div>
 
             <div class="col border p-3 shadow-sm bg-light">
                 <h3 class="mb-3 fw-bold">Mes revenus par catégorie</h3>
-
-                <p>chart à mettre</p>
+                <div>
+                    <canvas id="revenusCategorieChart" width="350" height="150"></canvas>
+                </div>
             </div>
         </div>
     </div>
+
+    <div>
+        <canvas id="revenusChart" width="400" height="150"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Bar chart - Revenus
+            new Chart(document.getElementById('revenusChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+                    datasets: [{
+                        label: 'Revenus (exemple)',
+                        backgroundColor: '#65bbb0',
+                        data: [1200, 1400, 1000, 1250, 1100, 1300]
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+
+            // Line chart - Dépenses
+            new Chart(document.getElementById('depensesChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+                    datasets: [{
+                        label: 'Dépenses (exemple)',
+                        borderColor: '#f75f91',
+                        backgroundColor: 'rgba(247, 95, 145, 0.1)',
+                        fill: true,
+                        data: [950, 1100, 1200, 1050, 980, 1020],
+                        tension: 0.3
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            // Pie chart - Dépenses par catégorie
+            new Chart(document.getElementById('depensesCategorieChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Loyer', 'Courses', 'Transport', 'Santé', 'Autres'],
+                    datasets: [{
+                        backgroundColor: ['#a8dadc', '#fcbf49', '#e76f51', '#6a4c93', '#b5ead7'],
+                        data: [600, 300, 150, 100, 200]
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            // Doughnut chart - Revenus par catégorie
+            new Chart(document.getElementById('revenusCategorieChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Salaire', 'Allocations', 'Ventes', 'Autres'],
+                    datasets: [{
+                        backgroundColor: ['#65bbb0', '#f4a261', '#9d4edd', '#e9c46a'],
+                        data: [2200, 500, 300, 200]
+                    }]
+                },
+                options: { responsive: true }
+            });
+        });
+    </script>
+
+
 
 {% endblock %}
