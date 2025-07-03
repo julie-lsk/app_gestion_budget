@@ -1,9 +1,57 @@
-{% block body %}
+<h2 class="border-bottom pb-3 mb-4 fs-3 text">Récapitulatif des transactions</h2>
+<div class="container mt-5">
+    {% if transactions is not empty %}
+        <div class="row mb-3">
+            <div class="d-flex gap-2 mb-3">
+                <select id="filter-type" class="form-select" style="width:auto;">
+                    <option value="">Tous</option>
+                    <option value="Dépense">Dépense</option>
+                    <option value="Revenu">Revenu</option>
+                </select>
 
-    <h2 class="border-bottom pb-3 mb-4 fs-3 text">Récap</h2>
+                <select id="filter-categorie" class="form-select" style="width:auto;">
+                    <option value="">Toutes</option>
+                    {% set categoriesUsed = [] %}
+                    {% for transaction in transactions %}
+                        {% if transaction.categorie.nom not in categoriesUsed %}
+                            {% set categoriesUsed = categoriesUsed|merge([transaction.categorie.nom]) %}
+                            <option value="{{ transaction.categorie.nom }}">{{ transaction.categorie.nom }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
 
-    <div class="container">
-        
-    </div>
+                <button id="filter-button" class="btn btn-primary">Filtrer</button>
+            </div>
+        </div>
 
-{% endblock %}
+        <table id="transactions-table" class="table table-bordered table-hover">
+            <thead class="table-light">
+            <tr>
+                <th scope="col" data-sort="date">Date</th>
+                <th scope="col" data-sort="type">Type</th>
+                <th scope="col" data-sort="categorie">Catégorie</th>
+                <th scope="col" class="text-end" data-sort="montant">Montant</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for transaction in transactions %}
+                <tr
+                    data-type="{{ transaction.type.value }}"
+                    data-categorie="{{ transaction.categorie.nom }}"
+                >
+                    <td>{{ transaction.date|date('d/m/Y') }}</td>
+                    <td>{{ transaction.type.value }}</td>
+                    <td>{{ transaction.categorie.nom }}</td>
+                    <td class="text-end">
+                        {{ transaction.montant|number_format(2, ',', ' ') }} €
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            Aucune transaction enregistrée pour le moment.
+        </div>
+    {% endif %}
+</div>
