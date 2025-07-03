@@ -20,7 +20,7 @@
                         <li class="nav-item">
                             <a
                                 href="#"
-                                class="nav-link {% if route == currentPage %}border border-dark rounded{% endif %}"
+                                class="nav-link {% if route == section %}border border-dark rounded{% endif %}"
                                 data-target="{{ route }}"
                                 onclick="afficherContenu(this)"
                             >
@@ -38,8 +38,7 @@
                         <div class="alert alert-success">{{ message }}</div>
                     {% endfor %}
 
-                    {# chargement initial via currentPage #}
-                    {% include 'dashboard/content/' ~ currentPage ~ '.html.twig' %}
+                    {% include 'dashboard/content/' ~ section ~ '.html.twig' %}
                 </div>
             </div>
         </div>
