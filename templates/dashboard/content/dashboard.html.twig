@@ -6,36 +6,125 @@
         <div class="row mb-4">
             <div class="col border p-3 shadow-sm bg-light me-3">
                 <h3 class="mb-3 fw-bold">Mes revenus</h3>
-
-                <p>chart à mettre</p>
+                <div>
+                    <canvas id="revenusChart" width="400" height="150"></canvas>
+                </div>
             </div>
-
             <div class="col border p-3 shadow-sm bg-light">
                 <h3 class="mb-3 fw-bold">Mes dépenses</h3>
-
-                <p>chart à mettre</p>
+                <div>
+                    <canvas id="depensesChart" width="400" height="150"></canvas>
+                </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col border p-3 shadow-sm bg-light me-3">
                 <h3 class="mb-3 fw-bold">Dernières opérations</h3>
-
-                <p>petite liste des 5 dernières transactions à mettre (date, montant, type de transaction)</p>
+                <div>
+                    <ul id="liste-transactions" class="list-unstyled mt-3 liste-transactions"></ul>
+                </div>
             </div>
 
             <div class="col border p-3 shadow-sm bg-light me-3">
                 <h3 class="mb-3 fw-bold">Mes dépenses par catégorie</h3>
-
-                <p>chart à mettre</p>
+                <div>
+                    <canvas id="depensesCategorieChart" width="350" height="150"></canvas>
+                </div>
             </div>
 
             <div class="col border p-3 shadow-sm bg-light">
                 <h3 class="mb-3 fw-bold">Mes revenus par catégorie</h3>
-
-                <p>chart à mettre</p>
+                <div>
+                    <canvas id="revenusCategorieChart" width="350" height="150"></canvas>
+                </div>
             </div>
         </div>
     </div>
-
 {% endblock %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    // 1. Bar chart - Revenus par mois
+                    const revenusLabels = data.revenusParMois.map(entry => `Mois ${entry.mois}`);
+                    const revenusData = data.revenusParMois.map(entry => entry.total);
+
+                    new Chart(document.getElementById('revenusChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: revenusLabels,
+                            datasets: [{
+                                label: 'Revenus',
+                                backgroundColor: '#65bbb0',
+                                data: revenusData
+                            }]
+                        },
+                        options: { responsive: true, plugins: { legend: { display: false } } }
+                    });
+
+                    // 2. Line chart - Dépenses par mois
+                    const depensesLabels = data.depensesParMois.map(entry => `Mois ${entry.mois}`);
+                    const depensesData = data.depensesParMois.map(entry => entry.total);
+
+                    new Chart(document.getElementById('depensesChart'), {
+                        type: 'line',
+                        data: {
+                            labels: depensesLabels,
+                            datasets: [{
+                                label: 'Dépenses',
+                                borderColor: '#f75f91',
+                                backgroundColor: 'rgba(247, 95, 145, 0.1)',
+                                fill: true,
+                                data: depensesData,
+                                tension: 0.3
+                            }]
+                        },
+                        options: { responsive: true }
+                    });
+
+                    // 3. Pie chart - Dépenses par catégorie
+                    const depensesCatLabels = data.depensesParCategorie.map(entry => entry.categorie);
+                    const depensesCatData = data.depensesParCategorie.map(entry => entry.total);
+
+                    new Chart(document.getElementById('depensesCategorieChart'), {
+                        type: 'pie',
+                        data: {
+                            labels: depensesCatLabels,
+                            datasets: [{
+                                backgroundColor: ['#a8dadc', '#fcbf49', '#e76f51', '#6a4c93', '#b5ead7'],
+                                data: depensesCatData
+                            }]
+                        },
+                        options: { responsive: true }
+                    });
+
+                    // 4. Doughnut chart - Revenus par catégorie
+                    const revenusCatLabels = data.revenusParCategorie.map(entry => entry.categorie);
+                    const revenusCatData = data.revenusParCategorie.map(entry => entry.total);
+
+                    new Chart(document.getElementById('revenusCategorieChart'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: revenusCatLabels,
+                            datasets: [{
+                                backgroundColor: ['#65bbb0', '#f4a261', '#9d4edd', '#e9c46a'],
+                                data: revenusCatData
+                            }]
+                        },
+                        options: { responsive: true }
+                    });
+
+                    // 5. Les 5 dernières opérations
+                    const ul = document.getElementById('liste-transactions');
+                    data.dernieresTransactions.forEach(tr => {
+                        const li = document.createElement('li');
+                        li.textContent = `${new Date(tr.date).toLocaleDateString()} - ${tr.type} : ${tr.montant} €`;
+                        ul.appendChild(li);
+                    })
+
+                })
+                .catch(error => console.error('Erreur lors du chargement des données du dashboard :', error));
+        });
+    </script>
