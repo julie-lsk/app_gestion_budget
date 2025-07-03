@@ -43,6 +43,7 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/dashboard, roles: ROLE_USER }
         - { path: ^/categorie, roles: ROLE_USER }
+        - { path: ^/moyens-de-paiement, roles: ROLE_USER }
 
 when@test:
     security:

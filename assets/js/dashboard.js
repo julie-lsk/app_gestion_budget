@@ -3,8 +3,11 @@ window.afficherContenu = function (lien) {
     const targetId = lien.getAttribute('data-target');
     const container = document.getElementById('content');
 
-    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-    lien.classList.add('active');
+    // MAJ de la classe "active" selon l'élément cliqué
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active', 'border', 'rounded');
+    });
+    lien.classList.add('active', 'border', 'rounded');
 
     container.innerHTML = '<p>Chargement...</p>';
 
@@ -97,7 +100,8 @@ window.ouvrirModalAjoutCategorie = function () {
         .catch(() => {
             modalContent.innerHTML = '<div class="alert alert-danger">Erreur de chargement du formulaire.</div>';
         });
-};
+}
+
 
 window.ouvrirModalEditCategorie = function (id) {
     const modal = new bootstrap.Modal(document.getElementById('modal-ajout-categorie'));
@@ -240,39 +244,38 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
             body: data
         })
-            .then(r => r.json())
-            .then(json => {
-                if (json.success) {
-                    container.innerHTML = json.html;
-                } else {
-                    alert('Erreur : ' + json.errors);
-                }
-            });
+        .then(r => r.json())
+        .then(json => {
+            if (json.success) {
+                container.innerHTML = json.html;
+            } else {
+                alert('Erreur : ' + json.errors);
+            }
+        });
     });
 
+    // click AJAX pour la suppression de note
     container.addEventListener('click', e => {
         if (!e.target.matches('.note-delete')) return;
         e.preventDefault();
         if (!confirm('Confirmer la suppression ?')) return;
-
-        const url = e.target.dataset.url;
+        const url   = e.target.dataset.url;
         const token = e.target.closest('.note-delete').parentNode.querySelector('.note-token').value;
-
         fetch(url, {
             method: 'POST',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'X-Requested-With':'XMLHttpRequest',
+                'Content-Type':'application/x-www-form-urlencoded'
             },
-            body: 'token=' + encodeURIComponent(token)
+            body: 'token='+encodeURIComponent(token)
         })
-            .then(r => r.json())
-            .then(json => {
-                if (json.success) {
-                    container.innerHTML = json.html;
-                } else {
-                    alert("Impossible de supprimer");
-                }
-            });
+        .then(r => r.json())
+        .then(json => {
+            if (json.success) {
+                container.innerHTML = json.html;
+            } else {
+                alert("Impossible de supprimer");
+            }
+        });
     });
 });
