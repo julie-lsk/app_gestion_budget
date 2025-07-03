@@ -21,13 +21,13 @@
         <div class="row">
             <div class="col border p-3 shadow-sm bg-light me-3">
                 <h3 class="mb-3 fw-bold">Dernières opérations</h3>
-
-                <p>petite liste des 5 dernières transactions à mettre (date, montant, type de transaction)</p>
+                <div>
+                    <ul id="liste-transactions" class="list-unstyled mt-3 liste-transactions"></ul>
+                </div>
             </div>
 
             <div class="col border p-3 shadow-sm bg-light me-3">
                 <h3 class="mb-3 fw-bold">Mes dépenses par catégorie</h3>
-
                 <div>
                     <canvas id="depensesCategorieChart" width="350" height="150"></canvas>
                 </div>
@@ -115,8 +115,16 @@
                         },
                         options: { responsive: true }
                     });
+
+                    // 5. Les 5 dernières opérations
+                    const ul = document.getElementById('liste-transactions');
+                    data.dernieresTransactions.forEach(tr => {
+                        const li = document.createElement('li');
+                        li.textContent = `${new Date(tr.date).toLocaleDateString()} - ${tr.type} : ${tr.montant} €`;
+                        ul.appendChild(li);
+                    })
+
                 })
                 .catch(error => console.error('Erreur lors du chargement des données du dashboard :', error));
         });
     </script>
-

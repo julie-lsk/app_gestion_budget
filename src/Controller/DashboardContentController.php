@@ -263,11 +263,22 @@ final class DashboardContentController extends AbstractController
         GROUP BY categorie
     ", ['userId' => $user->getId()])->fetchAllAssociative();
 
+// Requête pour les 5 dernières transactions
+        $dernieresTransactions = $conn->executeQuery("
+    SELECT t.date, t.montant, t.type
+    FROM transaction t
+    WHERE t.user_id = :userId
+    ORDER BY t.date DESC
+    LIMIT 5
+", ['userId' => $user->getId()])->fetchAllAssociative();
+
+
         return $this->json([
             'revenusParMois' => $revenus,
             'depensesParMois' => $depenses,
             'depensesParCategorie' => $depensesParCategorie,
             'revenusParCategorie' => $revenusParCategorie,
+            'dernieresTransactions' => $dernieresTransactions,
         ]);
     }
 }
