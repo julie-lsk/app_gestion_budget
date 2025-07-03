@@ -20,7 +20,7 @@
                         <li class="nav-item">
                             <a
                                 href="#"
-                                class="nav-link {% if route == section %}border border-dark rounded{% endif %}"
+                                class="nav-link"
                                 data-target="{{ route }}"
                                 onclick="afficherContenu(this)"
                             >
@@ -69,16 +69,5 @@
                 </div>
             </div>
         </div>
-
-        {# auto-fermeture des alertes #}
-        <script>
-            setTimeout(function() {
-                var alerts = document.querySelectorAll('.alert-success');
-                alerts.forEach(a => {
-                    var ins = bootstrap.Alert.getOrCreateInstance(a);
-                    ins.close();
-                });
-            }, 1500);
-        </script>
     {% endblock %}
 {% endblock %}

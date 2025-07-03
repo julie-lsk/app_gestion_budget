@@ -5,9 +5,9 @@ window.afficherContenu = function(lien) {
 
     // MAJ de la classe "active" selon l'élément cliqué
     document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
+        link.classList.remove('active', 'border', 'rounded');
     });
-    lien.classList.add('active');
+    lien.classList.add('active', 'border', 'rounded');
 
     container.innerHTML = '<p>Chargement...</p>';
 
@@ -41,7 +41,8 @@ window.ouvrirModalAjoutCategorie = function() {
         .catch(() => {
             modalContent.innerHTML = '<div class="alert alert-danger">Erreur de chargement du formulaire.</div>';
         });
-};
+}
+
 
 window.ouvrirModalEditCategorie = function(id) {
     const modal = new bootstrap.Modal(document.getElementById('modal-ajout-categorie'));
@@ -204,50 +205,6 @@ document.getElementById('btn-confirm-suppression').addEventListener('click', fun
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('content');
-    const navLinks = document.querySelectorAll('.dashboard-nav a[data-target]');
-
-    function afficherContenu(link) {
-        const page = link.dataset.target;
-
-        // MAJ de la bordure “active” dans la nav
-        navLinks.forEach(a => {
-            a.classList.remove('border', 'border-dark', 'rounded');
-        });
-        link.classList.add('border', 'border-dark', 'rounded');
-
-        // Indicateur pendant le chargement
-        container.innerHTML = '<p>Chargement du contenu…</p>';
-
-        fetch(`/dashboard/content/${page}`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                return response.text();
-            })
-            .then(html => {
-                container.innerHTML = html;
-            })
-            .catch(err => {
-                console.error('Erreur de chargement', err);
-                container.innerHTML = `
-          <div class="alert alert-danger">
-            Erreur de chargement du contenu.
-          </div>
-        `;
-            });
-    }
-
-    // Brancher les clics
-    navLinks.forEach(a => {
-        a.addEventListener('click', e => {
-            e.preventDefault();
-            afficherContenu(a);
-        });
-    });
 
     // au chargement
     document.addEventListener('DOMContentLoaded', () => {
