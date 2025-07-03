@@ -1,3 +1,11 @@
+<style>
+
+    .liste-transactions {
+    list-style-type: disc; /* ou circle, square, etc. */
+    padding-left: 1.2rem;
+    }
+</style>
+
 {% block body %}
 
     <h2 class="border-bottom pb-3 mb-4 fs-3 text">Bienvenue sur votre dashboard !</h2>
@@ -50,10 +58,8 @@
                 .then(response => response.json())
                 .then(data => {
                     // 1. Bar chart - Revenus par mois
-                    const moisNoms = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-                    const revenusSorted = data.revenusParMois.sort((a, b) => a.mois - b.mois);
-                    const revenusLabels = revenusSorted.map(entry => moisNoms[entry.mois - 1]);
-                    const revenusData = revenusSorted.map(entry => entry.total);
+                    const revenusLabels = data.revenusParMois.map(entry => `Mois ${entry.mois}`);
+                    const revenusData = data.revenusParMois.map(entry => entry.total);
 
                     new Chart(document.getElementById('revenusChart'), {
                         type: 'bar',
@@ -69,9 +75,8 @@
                     });
 
                     // 2. Line chart - Dépenses par mois
-                    const depensesSorted = data.depensesParMois.sort((a, b) => a.mois - b.mois);
-                    const depensesLabels = depensesSorted.map(entry => moisNoms[entry.mois - 1]);
-                    const depensesData = depensesSorted.map(entry => entry.total);
+                    const depensesLabels = data.depensesParMois.map(entry => `Mois ${entry.mois}`);
+                    const depensesData = data.depensesParMois.map(entry => entry.total);
 
                     new Chart(document.getElementById('depensesChart'), {
                         type: 'line',
