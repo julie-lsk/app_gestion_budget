@@ -41,72 +41,82 @@
             </div>
         </div>
     </div>
-
-    <div>
-        <canvas id="revenusChart" width="400" height="150"></canvas>
-    </div>
-
+{% endblock %}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Bar chart - Revenus
-            new Chart(document.getElementById('revenusChart'), {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
-                    datasets: [{
-                        label: 'Revenus (exemple)',
-                        backgroundColor: '#65bbb0',
-                        data: [1200, 1400, 1000, 1250, 1100, 1300]
-                    }]
-                },
-                options: { responsive: true, plugins: { legend: { display: false } } }
-            });
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    // 1. Bar chart - Revenus par mois
+                    const revenusLabels = data.revenusParMois.map(entry => `Mois ${entry.mois}`);
+                    const revenusData = data.revenusParMois.map(entry => entry.total);
 
-            // Line chart - Dépenses
-            new Chart(document.getElementById('depensesChart'), {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
-                    datasets: [{
-                        label: 'Dépenses (exemple)',
-                        borderColor: '#f75f91',
-                        backgroundColor: 'rgba(247, 95, 145, 0.1)',
-                        fill: true,
-                        data: [950, 1100, 1200, 1050, 980, 1020],
-                        tension: 0.3
-                    }]
-                },
-                options: { responsive: true }
-            });
+                    new Chart(document.getElementById('revenusChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: revenusLabels,
+                            datasets: [{
+                                label: 'Revenus',
+                                backgroundColor: '#65bbb0',
+                                data: revenusData
+                            }]
+                        },
+                        options: { responsive: true, plugins: { legend: { display: false } } }
+                    });
 
-            // Pie chart - Dépenses par catégorie
-            new Chart(document.getElementById('depensesCategorieChart'), {
-                type: 'pie',
-                data: {
-                    labels: ['Loyer', 'Courses', 'Transport', 'Santé', 'Autres'],
-                    datasets: [{
-                        backgroundColor: ['#a8dadc', '#fcbf49', '#e76f51', '#6a4c93', '#b5ead7'],
-                        data: [600, 300, 150, 100, 200]
-                    }]
-                },
-                options: { responsive: true }
-            });
+                    // 2. Line chart - Dépenses par mois
+                    const depensesLabels = data.depensesParMois.map(entry => `Mois ${entry.mois}`);
+                    const depensesData = data.depensesParMois.map(entry => entry.total);
 
-            // Doughnut chart - Revenus par catégorie
-            new Chart(document.getElementById('revenusCategorieChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Salaire', 'Allocations', 'Ventes', 'Autres'],
-                    datasets: [{
-                        backgroundColor: ['#65bbb0', '#f4a261', '#9d4edd', '#e9c46a'],
-                        data: [2200, 500, 300, 200]
-                    }]
-                },
-                options: { responsive: true }
-            });
+                    new Chart(document.getElementById('depensesChart'), {
+                        type: 'line',
+                        data: {
+                            labels: depensesLabels,
+                            datasets: [{
+                                label: 'Dépenses',
+                                borderColor: '#f75f91',
+                                backgroundColor: 'rgba(247, 95, 145, 0.1)',
+                                fill: true,
+                                data: depensesData,
+                                tension: 0.3
+                            }]
+                        },
+                        options: { responsive: true }
+                    });
+
+                    // 3. Pie chart - Dépenses par catégorie
+                    const depensesCatLabels = data.depensesParCategorie.map(entry => entry.categorie);
+                    const depensesCatData = data.depensesParCategorie.map(entry => entry.total);
+
+                    new Chart(document.getElementById('depensesCategorieChart'), {
+                        type: 'pie',
+                        data: {
+                            labels: depensesCatLabels,
+                            datasets: [{
+                                backgroundColor: ['#a8dadc', '#fcbf49', '#e76f51', '#6a4c93', '#b5ead7'],
+                                data: depensesCatData
+                            }]
+                        },
+                        options: { responsive: true }
+                    });
+
+                    // 4. Doughnut chart - Revenus par catégorie
+                    const revenusCatLabels = data.revenusParCategorie.map(entry => entry.categorie);
+                    const revenusCatData = data.revenusParCategorie.map(entry => entry.total);
+
+                    new Chart(document.getElementById('revenusCategorieChart'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: revenusCatLabels,
+                            datasets: [{
+                                backgroundColor: ['#65bbb0', '#f4a261', '#9d4edd', '#e9c46a'],
+                                data: revenusCatData
+                            }]
+                        },
+                        options: { responsive: true }
+                    });
+                })
+                .catch(error => console.error('Erreur lors du chargement des données du dashboard :', error));
         });
     </script>
 
-
-
-{% endblock %}

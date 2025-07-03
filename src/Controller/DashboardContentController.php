@@ -20,11 +20,12 @@ final class DashboardContentController extends AbstractController
     // "page" est déterminée selon le js
     #[Route('/dashboard/content/{page}', name: 'dashboard_content')]
     public function loadContent(
-        string $page,
-        Request $request,
+        string                 $page,
+        Request                $request,
         EntityManagerInterface $entityManager,
-        CategorieRepository $categorieRepository
-    ): Response {
+        CategorieRepository    $categorieRepository
+    ): Response
+    {
         switch ($page) {
             case 'dashboard':
                 // Renvoie le template sélectionné
@@ -70,7 +71,7 @@ final class DashboardContentController extends AbstractController
                 ]);
 
             case 'note':
-                $user  = $this->getUser();
+                $user = $this->getUser();
                 $notes = $entityManager
                     ->getRepository(Note::class)
                     ->findBy(['user' => $user]) ?: [];
@@ -84,7 +85,7 @@ final class DashboardContentController extends AbstractController
         }
     }
 
-    #[Route('/dashboard/content/note/new', name: 'dashboard_content_note_new', methods: ['GET','POST'])]
+    #[Route('/dashboard/content/note/new', name: 'dashboard_content_note_new', methods: ['GET', 'POST'])]
     public function newNoteModal(Request $request, EntityManagerInterface $em): Response
     {
         $note = new Note();
@@ -103,7 +104,8 @@ final class DashboardContentController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    #[Route('/dashboard/content/note/edit/{id}', name: 'dashboard_content_note_edit', methods: ['GET','POST'])]
+
+    #[Route('/dashboard/content/note/edit/{id}', name: 'dashboard_content_note_edit', methods: ['GET', 'POST'])]
     public function editNoteModal(Request $request, EntityManagerInterface $em, Note $note): Response
     {
         if ($note->getUser() !== $this->getUser()) {
@@ -135,7 +137,7 @@ final class DashboardContentController extends AbstractController
         }
 
         $token = $request->request->get('token');
-        if (!$this->isCsrfTokenValid('delete'.$note->getId(), $token)) {
+        if (!$this->isCsrfTokenValid('delete' . $note->getId(), $token)) {
             $this->addFlash('error', 'Token CSRF invalide.');
             return $this->redirectToRoute('app_dashboard', ['page' => 'note']);
         }
@@ -147,12 +149,13 @@ final class DashboardContentController extends AbstractController
         return $this->redirectToRoute('app_dashboard', ['page' => 'note']);
     }
 
-    #[Route('/dashboard/content/categorie/new', name: 'dashboard_content_categorie_new', methods: ['GET','POST'])]
+    #[Route('/dashboard/content/categorie/new', name: 'dashboard_content_categorie_new', methods: ['GET', 'POST'])]
     public function newCategorieModal(
-        Request $request,
+        Request                $request,
         EntityManagerInterface $em,
-        CategorieRepository $repo
-    ): Response {
+        CategorieRepository    $repo
+    ): Response
+    {
         $categorie = new \App\Entity\Categorie();
         $categorie->setUser($this->getUser());
         $form = $this->createForm(\App\Form\CategorieType::class, $categorie);
@@ -181,11 +184,12 @@ final class DashboardContentController extends AbstractController
 
     #[Route('/dashboard/content/categorie/edit/{id}', name: 'dashboard_content_categorie_edit', methods: ['GET', 'POST'])]
     public function editCategorieModal(
-        Request $request,
+        Request                $request,
         EntityManagerInterface $em,
-        CategorieRepository $repo,
-        int $id
-    ): Response {
+        CategorieRepository    $repo,
+        int                    $id
+    ): Response
+    {
         $categorie = $repo->find($id);
         if (!$categorie || $categorie->getUser() !== $this->getUser()) {
             return $this->json(['success' => false, 'message' => "Catégorie non trouvée."], 404);
@@ -214,4 +218,56 @@ final class DashboardContentController extends AbstractController
         ]);
     }
 
+    #[Route('/data', name: 'dashboard_data', methods: ['GET'])]
+    public function fetchGraphData(EntityManagerInterface $em): Response
+
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['error' => 'Non autorisé'], 403);
+        }
+
+        $conn = $em->getConnection();
+
+        // Requête pour revenus par mois
+        $revenus = $conn->executeQuery("
+        SELECT MONTH(t.date) AS mois, SUM(t.montant) AS total
+        FROM transaction t
+        WHERE t.type = 'revenu' AND t.user_id = :userId
+        GROUP BY mois
+    ", ['userId' => $user->getId()])->fetchAllAssociative();
+
+        // Requête pour dépenses par mois
+        $depenses = $conn->executeQuery("
+        SELECT MONTH(t.date) AS mois, SUM(t.montant) AS total
+        FROM transaction t
+        WHERE t.type = 'depense' AND t.user_id = :userId
+        GROUP BY mois
+    ", ['userId' => $user->getId()])->fetchAllAssociative();
+
+        // Requête pour dépenses par catégorie
+        $depensesParCategorie = $conn->executeQuery("
+        SELECT c.nom AS categorie, SUM(t.montant) AS total
+        FROM transaction t
+        JOIN categorie c ON t.categorie_id = c.id
+        WHERE t.type = 'depense' AND t.user_id = :userId
+        GROUP BY categorie
+    ", ['userId' => $user->getId()])->fetchAllAssociative();
+
+        // Requête pour revenus par catégorie
+        $revenusParCategorie = $conn->executeQuery("
+        SELECT c.nom AS categorie, SUM(t.montant) AS total
+        FROM transaction t
+        JOIN categorie c ON t.categorie_id = c.id
+        WHERE t.type = 'revenu' AND t.user_id = :userId
+        GROUP BY categorie
+    ", ['userId' => $user->getId()])->fetchAllAssociative();
+
+        return $this->json([
+            'revenusParMois' => $revenus,
+            'depensesParMois' => $depenses,
+            'depensesParCategorie' => $depensesParCategorie,
+            'revenusParCategorie' => $revenusParCategorie,
+        ]);
+    }
 }
