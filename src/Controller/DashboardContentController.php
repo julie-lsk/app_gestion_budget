@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class DashboardContentController extends AbstractController
 {
+    // "page" est déterminée selon le js
     #[Route('/dashboard/content/{page}', name: 'dashboard_content')]
     public function loadContent(
         string $page,
@@ -24,9 +25,11 @@ final class DashboardContentController extends AbstractController
     ): Response {
         switch ($page) {
             case 'dashboard':
+                // Renvoie le template sélectionné
                 return $this->render('dashboard/content/dashboard.html.twig');
 
             case 'recap':
+                // Renvoie le template sélectionné
                 return $this->render('dashboard/content/recap.html.twig');
 
             case 'categorie':
@@ -38,10 +41,18 @@ final class DashboardContentController extends AbstractController
                 ]);
 
             case 'ajouter_transaction':
+                // On ajoute une nouvelle transaction
                 $transaction = new Transaction();
-                $transaction->setUser($this->getUser());
-                $form = $this->createForm(TransactionNewForm::class, $transaction);
 
+                // On associe la transaction à l'utilisateur
+                $transaction->setUser($this->getUser());
+
+                // Création du formulaire
+                $form = $this->createForm(TransactionNewForm::class, $transaction, [
+                    'user' => $this->getUser(),
+                ]);
+
+                // On l'affiche sur le template twig
                 return $this->render('dashboard/content/ajouter_transaction.html.twig', [
                     'form' => $form->createView(),
                 ]);
@@ -140,13 +151,13 @@ final class DashboardContentController extends AbstractController
             $em->flush();
 
             $categories = $repo->findBy(['user' => $this->getUser()]);
-            $listHtml   = $this->renderView('dashboard/content/_categorie_list.html.twig', [
+            $listHtml = $this->renderView('dashboard/content/_categorie_list.html.twig', [
                 'categories' => $categories,
             ]);
 
             return $this->json([
-                'success'  => true,
-                'message'  => 'Catégorie enregistrée avec succès !',
+                'success' => true,
+                'message' => 'Catégorie enregistrée avec succès !',
                 'listHtml' => $listHtml,
             ]);
         }
@@ -156,7 +167,7 @@ final class DashboardContentController extends AbstractController
         ]);
     }
 
-    #[Route('/dashboard/content/categorie/edit/{id}', name: 'dashboard_content_categorie_edit', methods: ['GET','POST'])]
+    #[Route('/dashboard/content/categorie/edit/{id}', name: 'dashboard_content_categorie_edit', methods: ['GET', 'POST'])]
     public function editCategorieModal(
         Request $request,
         EntityManagerInterface $em,
@@ -165,7 +176,7 @@ final class DashboardContentController extends AbstractController
     ): Response {
         $categorie = $repo->find($id);
         if (!$categorie || $categorie->getUser() !== $this->getUser()) {
-            return $this->json(['success' => false, 'message' => 'Catégorie non trouvée.'], 404);
+            return $this->json(['success' => false, 'message' => "Catégorie non trouvée."], 404);
         }
 
         $form = $this->createForm(\App\Form\CategorieType::class, $categorie);
@@ -175,20 +186,21 @@ final class DashboardContentController extends AbstractController
             $em->flush();
 
             $categories = $repo->findBy(['user' => $this->getUser()]);
-            $listHtml   = $this->renderView('dashboard/content/_categorie_list.html.twig', [
+            $listHtml = $this->renderView('dashboard/content/_categorie_list.html.twig', [
                 'categories' => $categories,
             ]);
-
             return $this->json([
-                'success'  => true,
-                'message'  => 'Catégorie modifiée avec succès !',
+                'success' => true,
+                'message' => 'Catégorie modifiée avec succès !',
                 'listHtml' => $listHtml,
             ]);
         }
 
         return $this->render('dashboard/content/_categorie_edit_modal.html.twig', [
-            'form'      => $form->createView(),
+            'form' => $form->createView(),
             'categorie' => $categorie,
         ]);
     }
+
+
 }
